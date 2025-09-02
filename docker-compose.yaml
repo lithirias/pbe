@@ -1,0 +1,17 @@
+services:
+  node-red:
+    image: nodered/node-red
+    ports: 
+      - "1881:1880"
+    user: "1000:1000"
+    #restart: always
+    volumes:
+      - ./node-red/data:/data
+  postgres:
+    image: postgres
+    ports:
+      - "8081:5432"
+    user: "999:999"
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: fuleco
