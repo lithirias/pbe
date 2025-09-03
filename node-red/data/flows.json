@@ -1,0 +1,356 @@
+[
+    {
+        "id": "a5c50db4991b64e4",
+        "type": "tab",
+        "label": "Fluxo 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f85b0d9e0cf48cae",
+        "type": "group",
+        "z": "a5c50db4991b64e4",
+        "name": "Escrita do Log",
+        "style": {
+            "label": true,
+            "stroke": "#000000",
+            "color": "#000000"
+        },
+        "nodes": [
+            "53f54984fbf75680",
+            "d31339b1c6874198",
+            "2f80da5add4e9299",
+            "9ab55c88002c5784"
+        ],
+        "x": 124,
+        "y": 239,
+        "w": 702,
+        "h": 82
+    },
+    {
+        "id": "04998ec22bbaf661",
+        "type": "comment",
+        "z": "a5c50db4991b64e4",
+        "name": "Data e Hora",
+        "info": "",
+        "x": 190,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "d199b2055cd8c0b8",
+        "type": "inject",
+        "z": "a5c50db4991b64e4",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 240,
+        "y": 200,
+        "wires": [
+            [
+                "561f6aaff14e3339"
+            ]
+        ]
+    },
+    {
+        "id": "567f3c6e2514be4b",
+        "type": "function",
+        "z": "a5c50db4991b64e4",
+        "name": "msg.name",
+        "func": "msg.name = 'logName'\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 400,
+        "wires": [
+            [
+                "5c626bccf4f47ec8"
+            ]
+        ]
+    },
+    {
+        "id": "dcd6348f223dedde",
+        "type": "link in",
+        "z": "a5c50db4991b64e4",
+        "name": "logTapetes",
+        "links": [],
+        "x": 265,
+        "y": 400,
+        "wires": [
+            [
+                "567f3c6e2514be4b"
+            ]
+        ]
+    },
+    {
+        "id": "561f6aaff14e3339",
+        "type": "change",
+        "z": "a5c50db4991b64e4",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "DataeHora",
+                "pt": "flow",
+                "to": "$fromMillis(payload, '[D01]/[M01]/[Y0001] [H01]:[m01]:[s01]', '-0300')",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "Data",
+                "pt": "flow",
+                "to": "$fromMillis(payload, '[Y0001]-[M01]-[D01]', '-0300')",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "Ontem",
+                "pt": "flow",
+                "to": "$fromMillis(payload-5269440000, '[Y0001]-[M01]-[D01]', '-0300')",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "53f54984fbf75680",
+        "type": "function",
+        "z": "a5c50db4991b64e4",
+        "g": "f85b0d9e0cf48cae",
+        "name": "Concat msg and date for Log",
+        "func": "msg.payload = flow.get(\"DataeHora\") + \" | \" + msg.payload;\nmsg.path = \"/data/logs/\"+flow.get(\"Data\")+\"/\"+msg.name+\".txt\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 280,
+        "wires": [
+            [
+                "2f80da5add4e9299"
+            ]
+        ]
+    },
+    {
+        "id": "d31339b1c6874198",
+        "type": "link in",
+        "z": "a5c50db4991b64e4",
+        "g": "f85b0d9e0cf48cae",
+        "name": "Write File",
+        "links": [
+            "5c626bccf4f47ec8"
+        ],
+        "x": 165,
+        "y": 280,
+        "wires": [
+            [
+                "53f54984fbf75680"
+            ]
+        ]
+    },
+    {
+        "id": "2f80da5add4e9299",
+        "type": "file",
+        "z": "a5c50db4991b64e4",
+        "g": "f85b0d9e0cf48cae",
+        "name": "Log",
+        "filename": "path",
+        "filenameType": "msg",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 550,
+        "y": 280,
+        "wires": [
+            [
+                "9ab55c88002c5784"
+            ]
+        ]
+    },
+    {
+        "id": "9ab55c88002c5784",
+        "type": "debug",
+        "z": "a5c50db4991b64e4",
+        "g": "f85b0d9e0cf48cae",
+        "name": "debug 141",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "5c626bccf4f47ec8",
+        "type": "link out",
+        "z": "a5c50db4991b64e4",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "d31339b1c6874198"
+        ],
+        "x": 515,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "717bb7f2070ee272",
+        "type": "inject",
+        "z": "a5c50db4991b64e4",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "teste",
+        "payloadType": "str",
+        "x": 230,
+        "y": 440,
+        "wires": [
+            [
+                "567f3c6e2514be4b"
+            ]
+        ]
+    },
+    {
+        "id": "f39ec0feb0c13c71",
+        "type": "inject",
+        "z": "a5c50db4991b64e4",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "86400",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 620,
+        "y": 620,
+        "wires": [
+            [
+                "657f0174eb7e571e"
+            ]
+        ]
+    },
+    {
+        "id": "8834f36865c442f6",
+        "type": "file",
+        "z": "a5c50db4991b64e4",
+        "name": "Apaga anterior",
+        "filename": "path",
+        "filenameType": "msg",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "delete",
+        "encoding": "none",
+        "x": 1120,
+        "y": 620,
+        "wires": [
+            [
+                "b70032307f8b2d6d"
+            ]
+        ]
+    },
+    {
+        "id": "657f0174eb7e571e",
+        "type": "function",
+        "z": "a5c50db4991b64e4",
+        "name": "Concat msg and date for Log",
+        "func": "msg.path = \"/data/logs/\"+flow.get(\"Ontem\")+\"/\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 620,
+        "wires": [
+            [
+                "8834f36865c442f6",
+                "51e3d29e0a0adb4b"
+            ]
+        ]
+    },
+    {
+        "id": "51e3d29e0a0adb4b",
+        "type": "debug",
+        "z": "a5c50db4991b64e4",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "b70032307f8b2d6d",
+        "type": "debug",
+        "z": "a5c50db4991b64e4",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1120,
+        "y": 660,
+        "wires": []
+    }
+]
