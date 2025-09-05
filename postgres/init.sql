@@ -67,3 +67,6 @@ CREATE INDEX idx_historico_endereco_id ON "Historico"(id_endereco);
 CREATE INDEX idx_alertas_servico_id ON "Alertas"(id_servico);
 CREATE INDEX idx_alertas_contatos_alerta_id ON "Alertas_Contatos"(id_alerta);
 CREATE INDEX idx_alertas_contatos_contato_id ON "Alertas_Contatos"(id_contato);
+
+-- Criação do Usuário para realizar CRUD dentro do Node-RED
+CREATE USER ze_colmeia WITH PASSWORD 'catatau';
