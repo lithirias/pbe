@@ -14,6 +14,7 @@ services:
     user: "999:999"
     shm_size: 128mb
     environment:
-      POSTGRES_PASSWORD: fuleco
+      - POSTGRES_PASSWORD=fuleco
+      - TZ=America/Sao_Paulo
     volumes:
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql

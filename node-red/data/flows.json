@@ -332,6 +332,31 @@
         "groupType": "default"
     },
     {
+        "id": "71cbfc5b3f6590c7",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "172.27.155.6",
+        "hostFieldType": "str",
+        "port": "8081",
+        "portFieldType": "num",
+        "database": "postgres",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "postgres",
+        "userFieldType": "str",
+        "password": "fuleco",
+        "passwordFieldType": "str"
+    },
+    {
         "id": "83603bedfabb9380",
         "type": "ui-button",
         "z": "33f3721dac660206",
@@ -540,30 +565,13 @@
         "className": "",
         "passthru": false,
         "dropdownOptions": [],
-        "x": 370,
-        "y": 280,
+        "x": 390,
+        "y": 180,
         "wires": [
             [
                 "96d50c362bf474bb"
             ]
         ]
-    },
-    {
-        "id": "d66ab78c073fae01",
-        "type": "debug",
-        "z": "a5c50db4991b64e4",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 600,
-        "y": 100,
-        "wires": []
     },
     {
         "id": "3d9599f06e7d9058",
@@ -583,8 +591,8 @@
         "raw": false,
         "className": "",
         "name": "Erro",
-        "x": 790,
-        "y": 200,
+        "x": 750,
+        "y": 180,
         "wires": [
             []
         ]
@@ -600,14 +608,14 @@
         "displayTime": "5",
         "showCountdown": true,
         "outputs": 1,
-        "allowDismiss": true,
+        "allowDismiss": false,
         "dismissText": "Close",
         "allowConfirm": false,
         "confirmText": "Confirm",
         "raw": false,
         "className": "",
-        "name": "Confirmação",
-        "x": 810,
+        "name": "Retorno",
+        "x": 960,
         "y": 240,
         "wires": [
             []
@@ -625,13 +633,69 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 570,
-        "y": 220,
+        "x": 590,
+        "y": 180,
         "wires": [
             [
-                "d66ab78c073fae01",
                 "3d9599f06e7d9058"
             ],
+            [
+                "30ba6b8d890cebb7"
+            ]
+        ]
+    },
+    {
+        "id": "ef00eb50d821b980",
+        "type": "postgresql",
+        "z": "a5c50db4991b64e4",
+        "name": "",
+        "query": "",
+        "postgreSQLConfig": "71cbfc5b3f6590c7",
+        "split": false,
+        "rowsPerMsg": "",
+        "outputs": 1,
+        "x": 630,
+        "y": 240,
+        "wires": [
+            [
+                "1f4f04b2caae92cf"
+            ]
+        ]
+    },
+    {
+        "id": "30ba6b8d890cebb7",
+        "type": "template",
+        "z": "a5c50db4991b64e4",
+        "name": "Query",
+        "field": "query",
+        "fieldType": "msg",
+        "format": "sql",
+        "syntax": "mustache",
+        "template": "SELECT inserir_contato_retorno('{{name}}', '{{email}}');",
+        "output": "str",
+        "x": 470,
+        "y": 240,
+        "wires": [
+            [
+                "ef00eb50d821b980"
+            ]
+        ]
+    },
+    {
+        "id": "1f4f04b2caae92cf",
+        "type": "function",
+        "z": "a5c50db4991b64e4",
+        "name": "Change",
+        "func": "msg.payload = msg.payload[0].inserir_contato_retorno\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 240,
+        "wires": [
             [
                 "b241fc86c2f5f4b2"
             ]

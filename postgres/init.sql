@@ -70,3 +70,22 @@ CREATE INDEX idx_alertas_contatos_contato_id ON "Alertas_Contatos"(id_contato);
 
 -- Criação do Usuário para realizar CRUD dentro do Node-RED
 CREATE USER ze_colmeia WITH PASSWORD 'catatau';
+
+CREATE OR REPLACE FUNCTION inserir_contato_retorno(p_nome TEXT, p_email TEXT)
+RETURNS TEXT AS $$
+DECLARE
+    valor_existente INTEGER;
+BEGIN
+    -- Verifica se o email já existe
+    SELECT count(*) INTO valor_existente FROM "Contatos" WHERE email = p_email;
+
+    -- Se o email já existir, retorna uma mensagem de erro
+    IF valor_existente > 0 THEN
+        RETURN 'ERRO: O email "' || p_email || '" já existe.';
+    ELSE
+        -- Se não existir, realiza o INSERT e retorna uma mensagem de sucesso
+        INSERT INTO "Contatos" (nome, email) VALUES (p_nome, p_email);
+        RETURN 'SUCESSO: Contato "' || p_nome || '" inserido.';
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
