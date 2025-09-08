@@ -376,8 +376,8 @@
         "enablePointerup": false,
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
-        "x": 540,
-        "y": 260,
+        "x": 340,
+        "y": 120,
         "wires": [
             [
                 "d847cb6b9cdf4122"
@@ -415,8 +415,8 @@
         "enablePointerup": false,
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
-        "x": 500,
-        "y": 300,
+        "x": 300,
+        "y": 160,
         "wires": [
             [
                 "d847cb6b9cdf4122"
@@ -454,8 +454,8 @@
         "enablePointerup": false,
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
-        "x": 520,
-        "y": 340,
+        "x": 320,
+        "y": 200,
         "wires": [
             [
                 "d847cb6b9cdf4122"
@@ -493,8 +493,8 @@
         "enablePointerup": false,
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
-        "x": 510,
-        "y": 380,
+        "x": 310,
+        "y": 240,
         "wires": [
             [
                 "d847cb6b9cdf4122"
@@ -508,8 +508,8 @@
         "name": "",
         "ui": "3e16d757a05b0223",
         "events": "all",
-        "x": 740,
-        "y": 320,
+        "x": 540,
+        "y": 180,
         "wires": [
             []
         ]
@@ -742,24 +742,24 @@
                 "rows": null
             },
             {
-                "label": "Porta",
+                "label": "Serviço",
                 "key": "2",
+                "type": "text",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Porta",
+                "key": "3",
                 "type": "number",
                 "required": false,
                 "rows": null
             },
             {
                 "label": "DNS",
-                "key": "3",
+                "key": "4",
                 "type": "text",
                 "required": false,
-                "rows": null
-            },
-            {
-                "label": "Rede",
-                "key": "4",
-                "type": "dropdown",
-                "required": true,
                 "rows": null
             }
         ],
@@ -781,12 +781,12 @@
         "passthru": false,
         "dropdownOptions": [
             {
-                "dropdown": "4",
+                "dropdown": "",
                 "value": "0",
                 "label": "Interno"
             },
             {
-                "dropdown": "4",
+                "dropdown": "",
                 "value": "1",
                 "label": "Externo"
             }
@@ -795,8 +795,7 @@
         "y": 180,
         "wires": [
             [
-                "a19fed57451e3c4b",
-                "8d8e5b2a09b8af2b"
+                "a19fed57451e3c4b"
             ]
         ]
     },
@@ -829,7 +828,7 @@
         "type": "function",
         "z": "4126901460837cb3",
         "name": "Test RegEx",
-        "func": "function checkName(nome){\n    const regexName = /^[a-zA-Z\\u00C0-\\u017F\\s'-]+$/;\n    return regexName.test(nome);\n}\n\nfunction checkIP(ip){\n    const regexIPv4 = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;\n    return regexIPv4.test(ip);\n}\n\nfunction checkPort(porta) {\n    if (porta === null || porta === \"\") {\n        return true;\n    }\n    const regex = /^\\d+$/; \n    if (!regex.test(porta)) {\n        return false;\n    }\n    const numeroPorta = parseInt(porta, 10);\n    return numeroPorta >= 0 && numeroPorta <= 65535;\n}\n\nfunction checkDNS(dns) {\n    const regexDNS = /^$|^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\\.[A-Za-z0-9-]{1,63}(?<!-))*(\\.[A-Za-z]{2,6})$/;\n    return regexDNS.test(dns);\n}\n\nnode.warn(checkName(msg.payload[0]));\nnode.warn(checkIP(msg.payload[1]));\nnode.warn(checkPort(msg.payload[2]));\nnode.warn(checkDNS(msg.payload[3]));\n\nif (!checkName(msg.payload[0]) || !checkIP(msg.payload[1]) || !checkPort(msg.payload[2]) || !checkDNS(msg.payload[3])){\n    msg = {\n        payload: 'Informações inválidas. Tente novamente'\n    }\n    return [msg, null]\n}\nelse{\n    msg = {\n        nome: msg.payload[0],\n        ip: msg.payload[1],\n        porta: msg.payload[2],\n        dns: msg.payload[3],\n        rede: msg.payload[4]\n    }\n    return [null, msg]\n}",
+        "func": "function checkName(nome){\n    const regexName = /^[a-zA-Z\\u00C0-\\u017F\\s'-]+$/;\n    return regexName.test(nome);\n}\n\nfunction checkIP(ip){\n    const regexIPv4 = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;\n    return regexIPv4.test(ip);\n}\n\nfunction checkPort(porta) {\n    if (porta === null || porta === \"\") {\n        return true;\n    }\n    const regex = /^\\d+$/; \n    if (!regex.test(porta)) {\n        return false;\n    }\n    const numeroPorta = parseInt(porta, 10);\n    return numeroPorta >= 0 && numeroPorta <= 65535;\n}\n\nfunction checkDNS(dns) {\n    const regexDNS = /^$|^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\\.[A-Za-z0-9-]{1,63}(?<!-))*(\\.[A-Za-z]{2,6})$/;\n    return regexDNS.test(dns);\n}\n\nnode.warn(checkName(msg.payload[0]));\nnode.warn(checkIP(msg.payload[1]));\nnode.warn(checkName(msg.payload[2]));\nnode.warn(checkPort(msg.payload[3]));\nnode.warn(checkDNS(msg.payload[4]));\n\nif (!checkName(msg.payload[0]) || !checkIP(msg.payload[1]) || !checkName(msg.payload[2]) || !checkPort(msg.payload[3]) || !checkDNS(msg.payload[4])){\n    msg = {\n        payload: 'Informações inválidas. Tente novamente'\n    }\n    return [msg, null]\n}\nelse{\n    msg = {\n        nome: msg.payload[0],\n        ip: msg.payload[1],\n        servico: msg.payload[2],\n        porta: msg.payload[3],\n        dns: msg.payload[4]\n    }\n    return [null, msg]\n}",
         "outputs": 2,
         "timeout": 0,
         "noerr": 0,
@@ -898,13 +897,13 @@
         "fieldType": "msg",
         "format": "sql",
         "syntax": "mustache",
-        "template": "SELECT inserir_endereco_retorno('{{nome}}', '{{ip}}', {{porta}}, '{{dns}}', '{{rede}}');",
+        "template": "SELECT inserir_endereco_retorno('{{nome}}', '{{ip}}'::inet, '{{servico}}', {{porta}}, '{{dns}}');",
         "output": "str",
         "x": 390,
         "y": 240,
         "wires": [
             [
-                "b0e487e90ffed380"
+                "3cdaad3527f0b458"
             ]
         ]
     },
@@ -927,39 +926,5 @@
                 "9743c23724e30c0e"
             ]
         ]
-    },
-    {
-        "id": "b0e487e90ffed380",
-        "type": "debug",
-        "z": "4126901460837cb3",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 590,
-        "y": 400,
-        "wires": []
-    },
-    {
-        "id": "8d8e5b2a09b8af2b",
-        "type": "debug",
-        "z": "4126901460837cb3",
-        "name": "debug 2",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 660,
-        "y": 100,
-        "wires": []
     }
 ]

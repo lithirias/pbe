@@ -5,8 +5,7 @@ SET standard_conforming_strings = on;
 CREATE TABLE "Endereco" (
     id_endereco BIGSERIAL PRIMARY KEY,
     dns VARCHAR(255),
-    ip_interno INET,
-    ip_externo INET,
+    ip INET,
     apelido VARCHAR(255)
 );
 
@@ -93,52 +92,65 @@ $$ LANGUAGE plpgsql;
 
 
 -- Função para verificar endereço
-CREATE OR REPLACE FUNCTION inserir_endereco_retorno(
-    p_nome TEXT,
-    p_ip TEXT,
-    p_porta INTEGER,
-    p_dns TEXT,
-    p_rede TEXT
-)
-RETURNS TEXT AS $$
+
+CREATE OR REPLACE FUNCTION public.inserir_endereco_retorno(p_nome text, p_ip inet, p_servico text, p_porta integer, p_dns text)
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
 DECLARE
     valor_existente INTEGER;
+    id_endereco_salvo INTEGER;
 BEGIN
-    -- Se a porta não foi preenchida (é NULL)
+    -- Se a porta não foi preenchida (é NULL), verificamos a unicidade do IP
     IF p_porta IS NULL THEN
-        -- Verifica se o IP já existe no banco
+        -- Verifica se o IP já existe na tabela Endereco
         SELECT COUNT(*)
         INTO valor_existente
         FROM "Endereco"
         WHERE ip = p_ip;
 
-        -- Se o IP já existe, retorna um erro
+        -- Se o IP já existe, retorna um erro.
         IF valor_existente > 0 THEN
             RETURN 'ERRO: O IP ' || p_ip || ' já está cadastrado.';
         ELSE
-            -- Se não, insere o novo recurso
-            INSERT INTO "Endereco" (nome, ip, porta, dns, rede)
-            VALUES (p_nome, p_ip, NULL, p_dns, p_rede);
+            -- Se não, insere um novo registro em Endereco
+            INSERT INTO "Endereco" (apelido, ip, dns)
+            VALUES (p_nome, p_ip, p_dns)
+            RETURNING id_endereco INTO id_endereco_salvo; -- Captura o ID do novo registro
+
+            -- E insere o novo serviço, com a porta NULL
+            INSERT INTO "Servico" (nome_servico, porta, id_endereco)
+            VALUES (p_servico, p_porta, id_endereco_salvo);
+
             RETURN 'SUCESSO: Recurso salvo com o IP ' || p_ip || '.';
         END IF;
 
-    -- Se a porta foi preenchida
+    -- Se a porta foi preenchida, verificamos a unicidade da combinação IP/Porta
     ELSE
-        -- Verifica se o IP e a Porta já existem no banco
+        -- Verifica se a combinação IP e Porta já existe.
+        -- Para isso, fazemos um JOIN entre as tabelas Endereco e Servico.
         SELECT COUNT(*)
         INTO valor_existente
-        FROM "Endereco"
-        WHERE ip = p_ip AND porta = p_porta;
+        FROM "Endereco" AS e
+        JOIN "Servico" AS s ON e.id_endereco = s.id_endereco
+        WHERE e.ip = p_ip AND s.porta = p_porta;
 
-        -- Se a combinação IP/Porta já existe, retorna um erro
+        -- Se a combinação IP/Porta já existe, retorna um erro.
         IF valor_existente > 0 THEN
             RETURN 'ERRO: A combinação IP ' || p_ip || ' e Porta ' || p_porta || ' já está em uso.';
         ELSE
-            -- Se não, insere o novo recurso
-            INSERT INTO "Endereco" (nome, ip, porta, dns, rede)
-            VALUES (p_nome, p_ip, p_porta, p_dns, p_rede);
+            -- Se não, insere um novo registro em Endereco
+            INSERT INTO "Endereco" (apelido, ip, dns)
+            VALUES (p_nome, p_ip, p_dns)
+            RETURNING id_endereco INTO id_endereco_salvo; -- Captura o ID do novo registro
+
+            -- E insere o novo serviço, com a porta especificada
+            INSERT INTO "Servico" (nome_servico, porta, id_endereco)
+            VALUES (p_servico, p_porta, id_endereco_salvo);
+
             RETURN 'SUCESSO: Endereço salvo com o IP ' || p_ip || ' e Porta ' || p_porta || '.';
         END IF;
     END IF;
 END;
-$$ LANGUAGE plpgsql;
+$function$
+;
