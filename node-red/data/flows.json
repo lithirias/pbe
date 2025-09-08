@@ -540,11 +540,11 @@
         "className": "",
         "passthru": false,
         "dropdownOptions": [],
-        "x": 490,
-        "y": 180,
+        "x": 370,
+        "y": 280,
         "wires": [
             [
-                "d66ab78c073fae01"
+                "96d50c362bf474bb"
             ]
         ]
     },
@@ -561,8 +561,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 740,
-        "y": 120,
+        "x": 600,
+        "y": 100,
         "wires": []
     },
     {
@@ -570,7 +570,7 @@
         "type": "ui-notification",
         "z": "a5c50db4991b64e4",
         "ui": "3e16d757a05b0223",
-        "position": "top right",
+        "position": "top center",
         "colorDefault": true,
         "color": "#000000",
         "displayTime": "5",
@@ -583,8 +583,8 @@
         "raw": false,
         "className": "",
         "name": "Erro",
-        "x": 710,
-        "y": 180,
+        "x": 790,
+        "y": 200,
         "wires": [
             []
         ]
@@ -594,7 +594,7 @@
         "type": "ui-notification",
         "z": "a5c50db4991b64e4",
         "ui": "3e16d757a05b0223",
-        "position": "top right",
+        "position": "top center",
         "colorDefault": true,
         "color": "#000000",
         "displayTime": "5",
@@ -607,10 +607,34 @@
         "raw": false,
         "className": "",
         "name": "Confirmação",
-        "x": 730,
-        "y": 220,
+        "x": 810,
+        "y": 240,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "96d50c362bf474bb",
+        "type": "function",
+        "z": "a5c50db4991b64e4",
+        "name": "Test RegEx",
+        "func": "function checkName(name){\n    const regexNome = /^[a-zA-Z\\u00C0-\\u017F\\s'-]+$/;\n    return regexNome.test(name);\n}\n\nfunction checkEmail(email){\n    const regexEmail = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n    return regexEmail.test(email);\n}\n\nnode.warn(checkName(msg.payload[0]));\nnode.warn(checkEmail(msg.payload[1]));\n\nif (!checkName(msg.payload[0]) || !checkEmail(msg.payload[1])){\n    msg = {\n        name: msg.payload[0],\n        email: msg.payload[1],\n        payload: 'Nome ou E-mail inválido. Tente novamente'\n    }\n    return [msg, null]\n}\nelse{\n    msg = {\n        name: msg.payload[0],\n        email: msg.payload[1],\n        payload: 'Cadastro realizado com sucesso!'\n    }\n    return [null, msg]\n}",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 220,
+        "wires": [
+            [
+                "d66ab78c073fae01",
+                "3d9599f06e7d9058"
+            ],
+            [
+                "b241fc86c2f5f4b2"
+            ]
         ]
     },
     {
