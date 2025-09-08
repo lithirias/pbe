@@ -71,6 +71,7 @@ CREATE INDEX idx_alertas_contatos_contato_id ON "Alertas_Contatos"(id_contato);
 -- Criação do Usuário para realizar CRUD dentro do Node-RED
 CREATE USER ze_colmeia WITH PASSWORD 'catatau';
 
+-- Função para verificar contato
 CREATE OR REPLACE FUNCTION inserir_contato_retorno(p_nome TEXT, p_email TEXT)
 RETURNS TEXT AS $$
 DECLARE
@@ -86,6 +87,58 @@ BEGIN
         -- Se não existir, realiza o INSERT e retorna uma mensagem de sucesso
         INSERT INTO "Contatos" (nome, email) VALUES (p_nome, p_email);
         RETURN 'SUCESSO: Contato "' || p_nome || '" inserido.';
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Função para verificar endereço
+CREATE OR REPLACE FUNCTION inserir_endereco_retorno(
+    p_nome TEXT,
+    p_ip TEXT,
+    p_porta INTEGER,
+    p_dns TEXT,
+    p_rede TEXT
+)
+RETURNS TEXT AS $$
+DECLARE
+    valor_existente INTEGER;
+BEGIN
+    -- Se a porta não foi preenchida (é NULL)
+    IF p_porta IS NULL THEN
+        -- Verifica se o IP já existe no banco
+        SELECT COUNT(*)
+        INTO valor_existente
+        FROM "Endereco"
+        WHERE ip = p_ip;
+
+        -- Se o IP já existe, retorna um erro
+        IF valor_existente > 0 THEN
+            RETURN 'ERRO: O IP ' || p_ip || ' já está cadastrado.';
+        ELSE
+            -- Se não, insere o novo recurso
+            INSERT INTO "Endereco" (nome, ip, porta, dns, rede)
+            VALUES (p_nome, p_ip, NULL, p_dns, p_rede);
+            RETURN 'SUCESSO: Recurso salvo com o IP ' || p_ip || '.';
+        END IF;
+
+    -- Se a porta foi preenchida
+    ELSE
+        -- Verifica se o IP e a Porta já existem no banco
+        SELECT COUNT(*)
+        INTO valor_existente
+        FROM "Endereco"
+        WHERE ip = p_ip AND porta = p_porta;
+
+        -- Se a combinação IP/Porta já existe, retorna um erro
+        IF valor_existente > 0 THEN
+            RETURN 'ERRO: A combinação IP ' || p_ip || ' e Porta ' || p_porta || ' já está em uso.';
+        ELSE
+            -- Se não, insere o novo recurso
+            INSERT INTO "Endereco" (nome, ip, porta, dns, rede)
+            VALUES (p_nome, p_ip, p_porta, p_dns, p_rede);
+            RETURN 'SUCESSO: Endereço salvo com o IP ' || p_ip || ' e Porta ' || p_porta || '.';
+        END IF;
     END IF;
 END;
 $$ LANGUAGE plpgsql;

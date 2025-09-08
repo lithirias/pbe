@@ -121,17 +121,6 @@
         "groupType": "default"
     },
     {
-        "id": "fe73c124c9be6290",
-        "type": "ui-spacer",
-        "group": "4d94ff0d991be81e",
-        "name": "spacer",
-        "tooltip": "",
-        "order": 2,
-        "width": 1,
-        "height": 1,
-        "className": ""
-    },
-    {
         "id": "89a7be5ef6a0fbc3",
         "type": "ui-page",
         "name": "Home",
@@ -608,7 +597,7 @@
         "displayTime": "5",
         "showCountdown": true,
         "outputs": 1,
-        "allowDismiss": true,
+        "allowDismiss": false,
         "dismissText": "Close",
         "allowConfirm": false,
         "confirmText": "Confirm",
@@ -626,7 +615,7 @@
         "type": "function",
         "z": "a5c50db4991b64e4",
         "name": "Test RegEx",
-        "func": "function checkName(name){\n    const regexNome = /^[a-zA-Z\\u00C0-\\u017F\\s'-]+$/;\n    return regexNome.test(name);\n}\n\nfunction checkEmail(email){\n    const regexEmail = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n    return regexEmail.test(email);\n}\n\nnode.warn(checkName(msg.payload[0]));\nnode.warn(checkEmail(msg.payload[1]));\n\nif (!checkName(msg.payload[0]) || !checkEmail(msg.payload[1])){\n    msg = {\n        name: msg.payload[0],\n        email: msg.payload[1],\n        payload: 'Nome ou E-mail inválido. Tente novamente'\n    }\n    return [msg, null]\n}\nelse{\n    msg = {\n        name: msg.payload[0],\n        email: msg.payload[1],\n        payload: 'Cadastro realizado com sucesso!'\n    }\n    return [null, msg]\n}",
+        "func": "function checkName(name){\n    const regexNome = /^[a-zA-Z\\u00C0-\\u017F\\s'-]+$/;\n    return regexNome.test(name);\n}\n\nfunction checkEmail(email){\n    const regexEmail = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n    return regexEmail.test(email);\n}\n\nnode.warn(checkName(msg.payload[0]));\nnode.warn(checkEmail(msg.payload[1]));\n\nif (!checkName(msg.payload[0]) || !checkEmail(msg.payload[1])){\n    msg = {\n        payload: 'Nome ou E-mail inválido. Tente novamente'\n    }\n    return [msg, null]\n}\nelse{\n    msg = {\n        name: msg.payload[0],\n        email: msg.payload[1],\n    }\n    return [null, msg]\n}",
         "outputs": 2,
         "timeout": 0,
         "noerr": 0,
@@ -784,7 +773,7 @@
         "payload": "",
         "submit": "Cadastrar",
         "cancel": "Limpar",
-        "resetOnSubmit": true,
+        "resetOnSubmit": false,
         "topic": "topic",
         "topicType": "msg",
         "splitLayout": "",
@@ -802,10 +791,13 @@
                 "label": "Externo"
             }
         ],
-        "x": 610,
-        "y": 240,
+        "x": 490,
+        "y": 180,
         "wires": [
-            []
+            [
+                "a19fed57451e3c4b",
+                "8d8e5b2a09b8af2b"
+            ]
         ]
     },
     {
@@ -826,34 +818,148 @@
         "raw": false,
         "className": "",
         "name": "Erro",
-        "x": 790,
+        "x": 850,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a19fed57451e3c4b",
+        "type": "function",
+        "z": "4126901460837cb3",
+        "name": "Test RegEx",
+        "func": "function checkName(nome){\n    const regexName = /^[a-zA-Z\\u00C0-\\u017F\\s'-]+$/;\n    return regexName.test(nome);\n}\n\nfunction checkIP(ip){\n    const regexIPv4 = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;\n    return regexIPv4.test(ip);\n}\n\nfunction checkPort(porta) {\n    if (porta === null || porta === \"\") {\n        return true;\n    }\n    const regex = /^\\d+$/; \n    if (!regex.test(porta)) {\n        return false;\n    }\n    const numeroPorta = parseInt(porta, 10);\n    return numeroPorta >= 0 && numeroPorta <= 65535;\n}\n\nfunction checkDNS(dns) {\n    const regexDNS = /^$|^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\\.[A-Za-z0-9-]{1,63}(?<!-))*(\\.[A-Za-z]{2,6})$/;\n    return regexDNS.test(dns);\n}\n\nnode.warn(checkName(msg.payload[0]));\nnode.warn(checkIP(msg.payload[1]));\nnode.warn(checkPort(msg.payload[2]));\nnode.warn(checkDNS(msg.payload[3]));\n\nif (!checkName(msg.payload[0]) || !checkIP(msg.payload[1]) || !checkPort(msg.payload[2]) || !checkDNS(msg.payload[3])){\n    msg = {\n        payload: 'Informações inválidas. Tente novamente'\n    }\n    return [msg, null]\n}\nelse{\n    msg = {\n        nome: msg.payload[0],\n        ip: msg.payload[1],\n        porta: msg.payload[2],\n        dns: msg.payload[3],\n        rede: msg.payload[4]\n    }\n    return [null, msg]\n}",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 180,
+        "wires": [
+            [
+                "05933e1dff9280f7"
+            ],
+            [
+                "eb5ce3d75b8a68eb"
+            ]
+        ]
+    },
+    {
+        "id": "9743c23724e30c0e",
+        "type": "ui-notification",
+        "z": "4126901460837cb3",
+        "ui": "3e16d757a05b0223",
+        "position": "top center",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "5",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": false,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "Retorno",
+        "x": 880,
         "y": 240,
         "wires": [
             []
         ]
     },
     {
-        "id": "4084fe21ee6edb60",
-        "type": "ui-notification",
+        "id": "3cdaad3527f0b458",
+        "type": "postgresql",
         "z": "4126901460837cb3",
-        "ui": "3e16d757a05b0223",
-        "position": "top right",
-        "colorDefault": true,
-        "color": "#000000",
-        "displayTime": "5",
-        "showCountdown": true,
+        "name": "",
+        "query": "",
+        "postgreSQLConfig": "71cbfc5b3f6590c7",
+        "split": false,
+        "rowsPerMsg": "",
         "outputs": 1,
-        "allowDismiss": true,
-        "dismissText": "Close",
-        "allowConfirm": false,
-        "confirmText": "Confirm",
-        "raw": false,
-        "className": "",
-        "name": "Confirmação",
-        "x": 810,
-        "y": 280,
+        "x": 550,
+        "y": 240,
         "wires": [
-            []
+            [
+                "90702118c58ae16c"
+            ]
         ]
+    },
+    {
+        "id": "eb5ce3d75b8a68eb",
+        "type": "template",
+        "z": "4126901460837cb3",
+        "name": "Query",
+        "field": "query",
+        "fieldType": "msg",
+        "format": "sql",
+        "syntax": "mustache",
+        "template": "SELECT inserir_endereco_retorno('{{nome}}', '{{ip}}', {{porta}}, '{{dns}}', '{{rede}}');",
+        "output": "str",
+        "x": 390,
+        "y": 240,
+        "wires": [
+            [
+                "b0e487e90ffed380"
+            ]
+        ]
+    },
+    {
+        "id": "90702118c58ae16c",
+        "type": "function",
+        "z": "4126901460837cb3",
+        "name": "Change",
+        "func": "msg.payload = msg.payload[0].inserir_endereco_retorno\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 240,
+        "wires": [
+            [
+                "9743c23724e30c0e"
+            ]
+        ]
+    },
+    {
+        "id": "b0e487e90ffed380",
+        "type": "debug",
+        "z": "4126901460837cb3",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "8d8e5b2a09b8af2b",
+        "type": "debug",
+        "z": "4126901460837cb3",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 100,
+        "wires": []
     }
 ]
