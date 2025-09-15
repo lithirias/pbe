@@ -429,7 +429,7 @@
     },
     "@flowfuse/node-red-dashboard": {
         "name": "@flowfuse/node-red-dashboard",
-        "version": "1.26.0",
+        "version": "1.27.0",
         "local": true,
         "user": true,
         "nodes": {
@@ -729,6 +729,26 @@
                 "user": false,
                 "module": "@flowfuse/node-red-dashboard",
                 "file": "/data/node_modules/@flowfuse/node-red-dashboard/nodes/widgets/ui_progress.js"
+            }
+        }
+    },
+    "node-red-contrib-postgresql": {
+        "name": "node-red-contrib-postgresql",
+        "version": "0.14.2",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "postgresql": {
+                "name": "postgresql",
+                "types": [
+                    "postgreSQLConfig",
+                    "postgresql"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-postgresql",
+                "file": "/data/node_modules/node-red-contrib-postgresql/postgresql.js"
             }
         }
     }

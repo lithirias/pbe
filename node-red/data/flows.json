@@ -354,6 +354,69 @@
         "passwordFieldType": "str"
     },
     {
+        "id": "5075a7d8e4947586",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "c2ff5ba1f92a0f0e",
+        "type": "ui-theme",
+        "name": "Default",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094ce",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "bbc7b44a426b2b01",
+        "type": "ui-page",
+        "name": "UI Table Example",
+        "ui": "3e16d757a05b0223",
+        "path": "/table",
+        "icon": "table",
+        "layout": "grid",
+        "theme": "c2ff5ba1f92a0f0e",
+        "order": 6,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "5c66023267e5559e",
+        "type": "ui-group",
+        "name": "Table Cell Types",
+        "page": "bbc7b44a426b2b01",
+        "width": "12",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
         "id": "83603bedfabb9380",
         "type": "ui-button",
         "z": "33f3721dac660206",
@@ -699,7 +762,39 @@
         ]
     },
     {
-        "id": "ce34d32fd51e6974",
+        "id": "c3e2a8f9e6349efb",
+        "type": "postgresql",
+        "z": "bc9db508529adc81",
+        "name": "",
+        "query": "SELECT * FROM get_historico_ultimos_7_dias();",
+        "postgreSQLConfig": "71cbfc5b3f6590c7",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 370,
+        "y": 360,
+        "wires": [
+            [
+                "a8419fea1d937ae3"
+            ]
+        ]
+    },
+    {
+        "id": "cb5c8b8cef9e6454",
+        "type": "ui-event",
+        "z": "bc9db508529adc81",
+        "ui": "3e16d757a05b0223",
+        "name": "",
+        "x": 210,
+        "y": 360,
+        "wires": [
+            [
+                "c3e2a8f9e6349efb"
+            ]
+        ]
+    },
+    {
+        "id": "e75260856d53662f",
         "type": "ui-table",
         "z": "bc9db508529adc81",
         "group": "a73154d6576e1781",
@@ -710,18 +805,72 @@
         "height": 0,
         "maxrows": 0,
         "passthru": false,
-        "autocols": true,
-        "showSearch": true,
+        "autocols": false,
+        "showSearch": false,
         "deselect": true,
         "selectionType": "none",
-        "columns": [],
-        "mobileBreakpoint": "lg",
+        "columns": [
+            {
+                "title": "Nome",
+                "key": "apelido",
+                "keyType": "key",
+                "type": "text",
+                "width": "",
+                "align": "start"
+            },
+            {
+                "title": "Anterior",
+                "key": "estado_anterior",
+                "keyType": "key",
+                "type": "text",
+                "width": "",
+                "align": "start"
+            },
+            {
+                "title": "Atual",
+                "key": "estado_atual",
+                "keyType": "key",
+                "type": "text",
+                "width": "",
+                "align": "start"
+            },
+            {
+                "title": "Data",
+                "key": "data_hora",
+                "keyType": "key",
+                "type": "text",
+                "width": "",
+                "align": "start"
+            }
+        ],
+        "mobileBreakpoint": "sm",
         "mobileBreakpointType": "defaults",
-        "action": "append",
-        "x": 530,
-        "y": 240,
+        "action": "replace",
+        "className": "",
+        "x": 690,
+        "y": 360,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "a8419fea1d937ae3",
+        "type": "function",
+        "z": "bc9db508529adc81",
+        "name": "Change",
+        "func": "for(let i = 0; i < msg.payload.length; i++){\n    let old_state = msg.payload[i].estado_anterior == \"1\" ?\n        \"Online\":\"Offline\";\n    msg.payload[i].estado_anterior = old_state\n    \n    let new_state = msg.payload[i].estado_atual == \"1\" ?\n        \"Online\":\"Offline\";\n    msg.payload[i].estado_atual = new_state\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 360,
+        "wires": [
+            [
+                "e75260856d53662f"
+            ]
         ]
     },
     {
