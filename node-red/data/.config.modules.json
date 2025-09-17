@@ -1,0 +1,9 @@
+{
+    "pg": {
+        "spec": "pg",
+        "module": "pg",
+        "subpath": "",
+        "builtin": false,
+        "known": false
+    }
+}

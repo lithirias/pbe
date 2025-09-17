@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <libpq-fe.h>
+
+PGconn *db_connect(const char *conninfo){
+	PGconn *conn = PQconnectdb(conninfo);
+	if(PQstatus(conn) != CONNECTION_OK){
+		fprintf(stderr, "Erro ao conectar no BD: %s\n", PQerrorMessage(conn));
+		PQfinish(conn);
+		return NULL;
+	}
+	return conn;
+}
+
+int main(){
+	const char *conninfo = "host=172.27.155.6 port=8081 user=postgres password=fuleco dbname=postgres";
+
+	PGconn *conn = db_connect(conninfo);
+	if(!conn){
+		return 1;
+	}
+
+	printf("Iniciando o listener no canal 'state_change'...\n");
+	PQexec(conn, "LISTEN state_change");
+
+	while(1){
+		// Manda requisição de notificação
+		PQconsumeInput(conn);
+
+		// Verifica notificações pendentes
+		PGnotify *notify = PQnotifies(conn);
+		if(notify){
+			printf("Nova notificacao recebida!\n	ID: %s\n", notify->extra);
+			// Chamar função de alerta aqui
+
+			PQfreemem(notify);
+		}
+
+		sleep(60);
+	}
+
+	PQfinish(conn);
+	return 0;
+}

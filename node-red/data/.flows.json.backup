@@ -40,6 +40,14 @@
         "env": []
     },
     {
+        "id": "e3c16f131397a5bc",
+        "type": "tab",
+        "label": "Listener",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "3e16d757a05b0223",
         "type": "ui-base",
         "name": "Projeto TI Feevale",
@@ -415,6 +423,22 @@
         "className": "",
         "visible": "true",
         "disabled": "false"
+    },
+    {
+        "id": "a9f61e2c0a0109e7",
+        "type": "websocket-listener",
+        "path": "output",
+        "wholemsg": "false"
+    },
+    {
+        "id": "97610b725ea4370a",
+        "type": "websocket-client",
+        "path": "/output",
+        "tls": "",
+        "wholemsg": "false",
+        "hb": "0",
+        "subprotocol": "",
+        "headers": []
     },
     {
         "id": "83603bedfabb9380",
@@ -952,8 +976,7 @@
         "y": 180,
         "wires": [
             [
-                "a19fed57451e3c4b",
-                "85c6c573803cd3d9"
+                "a19fed57451e3c4b"
             ]
         ]
     },
@@ -997,8 +1020,7 @@
         "y": 180,
         "wires": [
             [
-                "05933e1dff9280f7",
-                "c0f5f3e9ba2cf569"
+                "05933e1dff9280f7"
             ],
             [
                 "eb5ce3d75b8a68eb"
@@ -1062,8 +1084,7 @@
         "y": 240,
         "wires": [
             [
-                "3cdaad3527f0b458",
-                "aad0cc287d8d8608"
+                "3cdaad3527f0b458"
             ]
         ]
     },
@@ -1088,54 +1109,117 @@
         ]
     },
     {
-        "id": "85c6c573803cd3d9",
+        "id": "9a615cac920ee6c4",
+        "type": "function",
+        "z": "e3c16f131397a5bc",
+        "name": "function 1",
+        "func": "var pg = global.get('pg'),\n    WebSocket = global.get('ws'),\n    config = {\n        user: 'postgres',\n        password: 'fuleco',\n        host: '172.27.155.6',\n        port: 8081,\n        database: 'postgres'\n    },\n    client = new pg.Client(config);\n\nclient.connect(function(err) {\n    if (err) node.error(err);\n\n    client.on('notification', function(msg) {\n        node.send(msg);\n    });\n\n    var query = client.query(\"LISTEN state_change\");\n});\n\ndelete msg._session;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "pg",
+                "module": "pg"
+            }
+        ],
+        "x": 770,
+        "y": 340,
+        "wires": [
+            [
+                "7043bcd2f2ea2c92",
+                "a66748e00968331a"
+            ]
+        ]
+    },
+    {
+        "id": "e1ee4b62698ecebc",
+        "type": "websocket in",
+        "z": "e3c16f131397a5bc",
+        "name": "",
+        "server": "",
+        "client": "97610b725ea4370a",
+        "x": 590,
+        "y": 340,
+        "wires": [
+            [
+                "9a615cac920ee6c4",
+                "dfb5acf360fd1c28"
+            ]
+        ]
+    },
+    {
+        "id": "7043bcd2f2ea2c92",
+        "type": "websocket out",
+        "z": "e3c16f131397a5bc",
+        "name": "",
+        "server": "a9f61e2c0a0109e7",
+        "client": "",
+        "x": 970,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "a66748e00968331a",
         "type": "debug",
-        "z": "4126901460837cb3",
+        "z": "e3c16f131397a5bc",
         "name": "debug 1",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
+        "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 710,
-        "y": 120,
+        "x": 980,
+        "y": 440,
         "wires": []
     },
     {
-        "id": "c0f5f3e9ba2cf569",
+        "id": "dfb5acf360fd1c28",
         "type": "debug",
-        "z": "4126901460837cb3",
+        "z": "e3c16f131397a5bc",
         "name": "debug 2",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
+        "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 960,
-        "y": 120,
+        "x": 760,
+        "y": 440,
         "wires": []
     },
     {
-        "id": "aad0cc287d8d8608",
-        "type": "debug",
-        "z": "4126901460837cb3",
-        "name": "debug 3",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1030,
-        "y": 440,
-        "wires": []
+        "id": "fde001bb7542835f",
+        "type": "inject",
+        "z": "e3c16f131397a5bc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 710,
+        "y": 240,
+        "wires": [
+            [
+                "9a615cac920ee6c4"
+            ]
+        ]
     }
 ]
