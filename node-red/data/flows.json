@@ -679,6 +679,53 @@
         "wires": []
     },
     {
+        "id": "ca4229549efb0482",
+        "type": "inject",
+        "z": "33f3721dac660206",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 610,
+        "y": 600,
+        "wires": [
+            [
+                "4b202d1be33c374d"
+            ]
+        ]
+    },
+    {
+        "id": "4b202d1be33c374d",
+        "type": "mqtt out",
+        "z": "33f3721dac660206",
+        "name": "",
+        "topic": "teste",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "eaeb7786f878215e",
+        "x": 870,
+        "y": 600,
+        "wires": []
+    },
+    {
         "id": "a6edf1c05c5267ef",
         "type": "ui-form",
         "z": "a5c50db4991b64e4",
