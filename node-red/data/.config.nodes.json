@@ -429,7 +429,7 @@
     },
     "@flowfuse/node-red-dashboard": {
         "name": "@flowfuse/node-red-dashboard",
-        "version": "1.27.0",
+        "version": "1.27.1",
         "local": true,
         "user": true,
         "nodes": {
@@ -730,8 +730,7 @@
                 "module": "@flowfuse/node-red-dashboard",
                 "file": "/data/node_modules/@flowfuse/node-red-dashboard/nodes/widgets/ui_progress.js"
             }
-        },
-        "pending_version": "1.27.1"
+        }
     },
     "node-red-contrib-postgresql": {
         "name": "node-red-contrib-postgresql",

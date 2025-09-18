@@ -730,7 +730,8 @@
                 "module": "@flowfuse/node-red-dashboard",
                 "file": "/data/node_modules/@flowfuse/node-red-dashboard/nodes/widgets/ui_progress.js"
             }
-        }
+        },
+        "pending_version": "1.27.1"
     },
     "node-red-contrib-postgresql": {
         "name": "node-red-contrib-postgresql",

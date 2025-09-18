@@ -1,7 +1,8 @@
 services:
   node-red:
     image: nodered/node-red
-    ports: 
+    container_name: node-red
+    ports:
       - "1881:1880"
     user: "1000:1000"
     restart: always
@@ -9,13 +10,24 @@ services:
       - ./node-red/data:/data
   postgres:
     image: postgres
+    container_name: postgres
     restart: always
     ports:
       - "8081:5432"
-    user: "999:999"
     shm_size: 128mb
     environment:
-      - POSTGRES_PASSWORD=fuleco
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - TZ=America/Sao_Paulo
     volumes:
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres/data:/var/lib/postgresql/data
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    ports:
+      - "1884:1883"
+    restart: always
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
