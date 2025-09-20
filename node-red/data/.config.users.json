@@ -44,6 +44,6 @@
         },
         "menu-deploymenu-item-node": true,
         "menu-deploymenu-item-full": false,
-        "menu-menu-item-palette": true
+        "menu-menu-item-palette": false
     }
 }

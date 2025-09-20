@@ -398,33 +398,6 @@
         }
     },
     {
-        "id": "bbc7b44a426b2b01",
-        "type": "ui-page",
-        "name": "UI Table Example",
-        "ui": "3e16d757a05b0223",
-        "path": "/table",
-        "icon": "table",
-        "layout": "grid",
-        "theme": "c2ff5ba1f92a0f0e",
-        "order": 6,
-        "className": "",
-        "visible": "true",
-        "disabled": "false"
-    },
-    {
-        "id": "5c66023267e5559e",
-        "type": "ui-group",
-        "name": "Table Cell Types",
-        "page": "bbc7b44a426b2b01",
-        "width": "12",
-        "height": "1",
-        "order": 1,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false"
-    },
-    {
         "id": "a9f61e2c0a0109e7",
         "type": "websocket-listener",
         "path": "output",
@@ -639,44 +612,6 @@
         "wires": [
             []
         ]
-    },
-    {
-        "id": "3d3d9330374884d1",
-        "type": "mqtt in",
-        "z": "33f3721dac660206",
-        "name": "",
-        "topic": "teste",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "eaeb7786f878215e",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 520,
-        "y": 380,
-        "wires": [
-            [
-                "accc5863d3bc86a2"
-            ]
-        ]
-    },
-    {
-        "id": "accc5863d3bc86a2",
-        "type": "debug",
-        "z": "33f3721dac660206",
-        "name": "debug 3",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 760,
-        "y": 380,
-        "wires": []
     },
     {
         "id": "a6edf1c05c5267ef",
@@ -1092,7 +1027,7 @@
                 "05933e1dff9280f7"
             ],
             [
-                "eb5ce3d75b8a68eb"
+                "17b62cb6938d3916"
             ]
         ]
     },
@@ -1139,25 +1074,6 @@
         ]
     },
     {
-        "id": "eb5ce3d75b8a68eb",
-        "type": "template",
-        "z": "4126901460837cb3",
-        "name": "Query",
-        "field": "query",
-        "fieldType": "msg",
-        "format": "sql",
-        "syntax": "mustache",
-        "template": "SELECT inserir_endereco_retorno('{{nome}}', '{{ip}}'::inet, '{{servico}}', '{{porta}}', '{{dns}}');",
-        "output": "str",
-        "x": 390,
-        "y": 240,
-        "wires": [
-            [
-                "3cdaad3527f0b458"
-            ]
-        ]
-    },
-    {
         "id": "90702118c58ae16c",
         "type": "function",
         "z": "4126901460837cb3",
@@ -1178,121 +1094,48 @@
         ]
     },
     {
-        "id": "9a615cac920ee6c4",
+        "id": "17b62cb6938d3916",
         "type": "function",
-        "z": "e3c16f131397a5bc",
-        "name": "function 1",
-        "func": "var pg = global.get('pg'),\n    WebSocket = global.get('ws'),\n    config = {\n        user: 'postgres',\n        password: 'fuleco',\n        host: '172.27.155.6',\n        port: 8081,\n        database: 'postgres'\n    },\n    client = new pg.Client(config);\n\nclient.connect(function(err) {\n    if (err) node.error(err);\n\n    client.on('notification', function(msg) {\n        node.send(msg);\n    });\n\n    var query = client.query(\"LISTEN state_change\");\n});\n\ndelete msg._session;\nreturn msg;",
+        "z": "4126901460837cb3",
+        "name": "Query",
+        "func": "const data = msg;\n\nmsg.query = \"SELECT inserir_endereco_retorno($1, $2::inet, $3, $4, $5);\";\n\nmsg.params = [\n    data.nome,\n    data.ip,\n    data.servico,\n    data.porta, \n    data.dns\n];\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "libs": [
-            {
-                "var": "pg",
-                "module": "pg"
-            }
-        ],
-        "x": 770,
-        "y": 340,
-        "wires": [
-            [
-                "7043bcd2f2ea2c92",
-                "a66748e00968331a"
-            ]
-        ]
-    },
-    {
-        "id": "e1ee4b62698ecebc",
-        "type": "websocket in",
-        "z": "e3c16f131397a5bc",
-        "name": "",
-        "server": "",
-        "client": "97610b725ea4370a",
-        "x": 590,
-        "y": 340,
-        "wires": [
-            [
-                "9a615cac920ee6c4",
-                "dfb5acf360fd1c28"
-            ]
-        ]
-    },
-    {
-        "id": "7043bcd2f2ea2c92",
-        "type": "websocket out",
-        "z": "e3c16f131397a5bc",
-        "name": "",
-        "server": "a9f61e2c0a0109e7",
-        "client": "",
-        "x": 970,
-        "y": 340,
-        "wires": []
-    },
-    {
-        "id": "a66748e00968331a",
-        "type": "debug",
-        "z": "e3c16f131397a5bc",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 980,
-        "y": 440,
-        "wires": []
-    },
-    {
-        "id": "dfb5acf360fd1c28",
-        "type": "debug",
-        "z": "e3c16f131397a5bc",
-        "name": "debug 2",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 760,
-        "y": 440,
-        "wires": []
-    },
-    {
-        "id": "fde001bb7542835f",
-        "type": "inject",
-        "z": "e3c16f131397a5bc",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 710,
+        "libs": [],
+        "x": 390,
         "y": 240,
         "wires": [
             [
-                "9a615cac920ee6c4"
+                "3cdaad3527f0b458"
             ]
         ]
     },
     {
-        "id": "9872d410cd150740",
+        "id": "fcde88da38af4f4f",
+        "type": "mqtt in",
+        "z": "e3c16f131397a5bc",
+        "name": "",
+        "topic": "pg_processor_bridge",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "eaeb7786f878215e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 220,
+        "y": 120,
+        "wires": [
+            [
+                "37ba113304561a04"
+            ]
+        ]
+    },
+    {
+        "id": "512b7d5ee36616cc",
         "type": "e-mail",
         "z": "e3c16f131397a5bc",
         "server": "smtp.gmail.com",
@@ -1302,10 +1145,65 @@
         "token": "oauth2Response.access_token",
         "secure": true,
         "tls": true,
-        "name": "",
+        "name": "ermelotp@outlook.com",
         "dname": "",
-        "x": 750,
-        "y": 540,
+        "x": 670,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "37ba113304561a04",
+        "type": "debug",
+        "z": "e3c16f131397a5bc",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 350,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "9f27c721854ee892",
+        "type": "mqtt in",
+        "z": "e3c16f131397a5bc",
+        "name": "",
+        "topic": "historico_channel",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "eaeb7786f878215e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 280,
+        "wires": [
+            [
+                "1735e836405640e1"
+            ]
+        ]
+    },
+    {
+        "id": "1735e836405640e1",
+        "type": "debug",
+        "z": "e3c16f131397a5bc",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 320,
         "wires": []
     }
 ]
